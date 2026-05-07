@@ -5,12 +5,14 @@
 #include <ctime>
 #include "Utils.h"
 #include "Window.h"
+#include "SlotMachine.h"
 
 const char* symbolToStr(Symbol s) {
 	switch (s) {
 	case A: return "A";
 	case B: return "B";
 	case C: return "C";
+	case WILD: return "W";
 	}
 	return "?";
 }
@@ -77,9 +79,9 @@ int EvaluateLine(const Window& window, const Payline& line, const std::vector<Pa
 {
 	std::vector<Symbol> symbols;
 
-	for (int reel = 0; reel < window.grid.size(); reel++) {
+	for (int reel = 0; reel < window.m_grid.size(); reel++) {
 		int row = line.rows[reel];
-		symbols.push_back(window.grid[reel][row]);
+		symbols.push_back(window.m_grid[reel][row]);
 	}
 
 	int bestWin = 0;
@@ -229,4 +231,67 @@ int oldSlotMachine() {
 	std::cout << "Variance: " << variance << std::endl;
 
 	return 0;
+}
+
+void PrintWindow(const SlotMachine& sm)
+{
+	int maxRowNum = 0;
+	for (size_t i = 0; i < sm.m_window.m_reelsNum; i++)
+	{
+		maxRowNum = std::max(maxRowNum, sm.m_window.m_rowsNum[i]);
+	}
+
+	for (size_t i = 0; i < maxRowNum; i++)
+	{
+		for (size_t j = 0; j < sm.m_window.m_reelsNum; j++)
+		{
+			if (i >= sm.m_window.m_rowsNum[j])
+				continue;
+
+			std::cout << symbolToStr(sm.m_window.m_grid[j][i]);
+		}
+		std::cout << std::endl;
+	}
+}
+
+int main()
+{
+	SlotMachine sm(3, 5);
+	sm.m_gameConfig.paylines.resize(1);
+	sm.m_gameConfig.paylines[0] = Payline({ 1,1,1 });
+
+	sm.m_gameConfig.rules.resize(5);
+	sm.m_gameConfig.rules[0] = PayRule{ Symbol::A, 3, 50 };
+	sm.m_gameConfig.rules[1] = PayRule{ Symbol::B, 3, 5 };
+	sm.m_gameConfig.rules[2] = PayRule{ Symbol::C, 3, 2 };
+
+	sm.m_gameConfig.reels.resize(3);
+	sm.m_gameConfig.reels[0] = Reel();
+	sm.m_gameConfig.reels[0].strip = {
+		Symbol::A, Symbol::A, Symbol::A,
+		Symbol::B, Symbol::B, Symbol::B,
+		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
+	sm.m_gameConfig.reels[1] = Reel();
+	sm.m_gameConfig.reels[1].strip = {
+		Symbol::A, Symbol::A, Symbol::A,
+		Symbol::B, Symbol::B, Symbol::B,
+		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
+	sm.m_gameConfig.reels[2] = Reel();
+	sm.m_gameConfig.reels[2].strip = {
+		Symbol::A, Symbol::A, Symbol::A,
+		Symbol::B, Symbol::B, Symbol::B,
+		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
+
+	sm.SetUpDistributions();
+
+	std::mt19937 gen(std::time(nullptr));
+	
+	for (size_t i = 0; i < 10; i++)
+	{
+		sm.Spin(gen);
+		PrintWindow(sm);
+		std::cout << "------\n";
+	}
+
+	
 }

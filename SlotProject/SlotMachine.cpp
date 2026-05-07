@@ -24,7 +24,7 @@ void SlotMachine::SetUpDistributions()
     }
 }
 
-Window SlotMachine::Spin(std::mt19937& gen)
+void SlotMachine::Spin(std::mt19937& gen)
 {
     // Fill every reel
     for (int reel = 0; reel < m_window.m_reelsNum; reel++) {
@@ -35,7 +35,7 @@ Window SlotMachine::Spin(std::mt19937& gen)
         // Fill slots in reel
         for (int row = 0; row < m_window.m_rowsNum[reel]; row++)
         {
-            m_window.grid[reel][row] = m_gameConfig.reels[reel].strip[(first_idx + row) % reelLen];
+            m_window.m_grid[reel][row] = m_gameConfig.reels[reel].strip[(first_idx + row) % reelLen];
         }
     }
 }

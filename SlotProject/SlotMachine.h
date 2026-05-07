@@ -15,7 +15,7 @@ public:
 
 	void SetUpDistributions();
 
-	Window Spin(std::mt19937& gen);
+	void Spin(std::mt19937& gen);
 
 	GameConfig m_gameConfig;
 	Window m_window;

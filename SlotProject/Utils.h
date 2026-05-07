@@ -10,7 +10,7 @@ struct Reel {
 // line in window
 struct Payline {
     std::vector<int> rows;
-
+    Payline() {};
     Payline(const std::vector<int>& rows) : rows(rows) {};
 };
 

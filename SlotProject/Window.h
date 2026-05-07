@@ -24,13 +24,15 @@ public:
     std::vector<int> m_rowsNum; // can be different for each reel
 
     // [reel][row]
-    std::vector<std::vector<Symbol>> grid;
+    std::vector<std::vector<Symbol>> m_grid;
 
     Window();
 
     Window(int reelsNum, int rowsNum);
 
     Window(int reelsNum, const std::vector<int>& rowsNum);
+
+    void InitGrid();
 
     Symbol GetSymbolOnLine(int reel, int row) const;
 };
