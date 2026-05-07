@@ -246,7 +246,10 @@ void PrintWindow(const SlotMachine& sm)
 		for (size_t j = 0; j < sm.m_window.m_reelsNum; j++)
 		{
 			if (i >= sm.m_window.m_rowsNum[j])
+			{
+				std::cout << " ";
 				continue;
+			}
 
 			std::cout << symbolToStr(sm.m_window.m_grid[j][i]);
 		}
@@ -256,7 +259,8 @@ void PrintWindow(const SlotMachine& sm)
 
 int main()
 {
-	SlotMachine sm(3, 5);
+	std::vector<int> rowsNum = { 1, 3, 5, 3, 1 };
+	SlotMachine sm(5, rowsNum);
 	sm.m_gameConfig.paylines.resize(1);
 	sm.m_gameConfig.paylines[0] = Payline({ 1,1,1 });
 
@@ -265,22 +269,16 @@ int main()
 	sm.m_gameConfig.rules[1] = PayRule{ Symbol::B, 3, 5 };
 	sm.m_gameConfig.rules[2] = PayRule{ Symbol::C, 3, 2 };
 
-	sm.m_gameConfig.reels.resize(3);
+	sm.m_gameConfig.reels.resize(5);
 	sm.m_gameConfig.reels[0] = Reel();
 	sm.m_gameConfig.reels[0].strip = {
 		Symbol::A, Symbol::A, Symbol::A,
 		Symbol::B, Symbol::B, Symbol::B,
 		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
-	sm.m_gameConfig.reels[1] = Reel();
-	sm.m_gameConfig.reels[1].strip = {
-		Symbol::A, Symbol::A, Symbol::A,
-		Symbol::B, Symbol::B, Symbol::B,
-		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
-	sm.m_gameConfig.reels[2] = Reel();
-	sm.m_gameConfig.reels[2].strip = {
-		Symbol::A, Symbol::A, Symbol::A,
-		Symbol::B, Symbol::B, Symbol::B,
-		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
+	sm.m_gameConfig.reels[1] = sm.m_gameConfig.reels[0];
+	sm.m_gameConfig.reels[2] = sm.m_gameConfig.reels[0];
+	sm.m_gameConfig.reels[3] = sm.m_gameConfig.reels[0];
+	sm.m_gameConfig.reels[4] = sm.m_gameConfig.reels[0];
 
 	sm.SetUpDistributions();
 
@@ -292,6 +290,4 @@ int main()
 		PrintWindow(sm);
 		std::cout << "------\n";
 	}
-
-	
 }
