@@ -125,10 +125,12 @@
   <ItemGroup>
     <ClCompile Include="SlotMachine.cpp" />
     <ClCompile Include="SlotProject.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SlotMachine.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <ctime>
 #include "Utils.h"
+#include "Window.h"
 
 const char* symbolToStr(Symbol s) {
 	switch (s) {
@@ -71,10 +72,6 @@ void FillReels()
 		Symbol::C, Symbol::C, Symbol::C, Symbol::WILD };
 }
 
-Symbol GetSymbolOnLine(const Window& w, int reel, int row) {
-	return w.grid[reel][row];
-}
-
 // left-to-right only
 int EvaluateLine(const Window& window, const Payline& line, const std::vector<PayRule>& rules)
 {
@@ -140,32 +137,14 @@ int EvaluateAllLines(const Window& window) {
 	return totalWin;
 }
 
-Window Spin(std::mt19937& gen)
-{
-	std::uniform_int_distribution<> dist(0, STRIP_LEN-1);
-
-	Window wind;
-	wind.grid.resize(REELS_NUM, std::vector<Symbol>(ROWS_NUM));
-
-	// Fill every reel
-	for (int reel = 0; reel < REELS_NUM; reel++) {
-		auto first_idx = dist(gen);
-
-		// Fill slots in reel
-		for (int row = 0; row < ROWS_NUM; row++)
-		{
-			wind.grid[reel][row] = g_gameConfig.reels[reel].strip[(first_idx + row) % STRIP_LEN];
-		}
-	}
-}
-
 double Simulate(int spins) {
 	std::mt19937 gen(std::time(nullptr));
 
 	long long totalWin = 0;
 
 	for (int i = 0; i < spins; i++) {
-		Window w = Spin(gen);
+		Window w;
+		// w.Spin(gen);	
 		totalWin += EvaluateAllLines(w);
 	}
 
@@ -194,7 +173,7 @@ int getPayout(Symbol s1, Symbol s2, Symbol s3) {
 	return 0;
 }
 
-int main() {
+int oldSlotMachine() {
 	std::mt19937 gen(std::time(nullptr));
 	Probabilities prob;
 
